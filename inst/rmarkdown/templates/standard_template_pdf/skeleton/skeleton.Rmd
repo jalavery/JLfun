@@ -1,0 +1,27 @@
+---
+title: "Project Title: Analysis"
+author: "Jessica Lavery, MS"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+knit: (function(inputFile, encoding) {
+      rmarkdown::render(inputFile,
+                        encoding=encoding,
+                        output_file=paste0(here::here("Documents/Output/", Sys.Date(),'.pdf')) })
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(gtsummary)
+
+# Date        Update
+
+```
+
+## Overview
+
+## Methods
+
+## Results
+
