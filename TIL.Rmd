@@ -1,0 +1,100 @@
+---
+title: "TIL"
+author: "Jessica Lavery"
+date: "2/7/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Reshape data from multiple columns to 1 row per column (rather than rbind with renames; 2/7/2021)
+
+```{r}
+tibble(low = c(1, 2, 3),
+       medium = c(4, 5, 6),
+       high = c(7, 8, 9)) %>% 
+  # id.vars specify the variables that are NOT going to go from multiple columns to a long format in a single column
+  reshape2::melt(#id.vars = c("low", "medium", "high"),
+                 value.name = "value") 
+```
+
+
+## Expand by Frequency (2/1/2021)
+
+Starting with a summarized dataset, expand to 1 record per unit. 
+
+```{r}
+tibble(outc = c(rep(0, 10), rep(1, 10)),
+       freq = abs(round(10*rnorm(20))) + 1) %>% 
+  vcdExtra::expand.dft(freq = "freq") %>% 
+  nrow()
+```
+
+## Rename columns systematically (3/1/2021)
+
+```{r}
+# add "_pt" suffix to select varaible names
+# can modify to add a prefix instead
+tibble(n_tm_1 = c(1, 2),
+       n_tm_2 = c(3, 4)) %>% 
+  rename_with(~str_c(., "_pt"), .cols = starts_with("n_tm")) %>% 
+  names()
+```
+
+## Select minimum value, including ties (3/7/2021)
+
+```{r}
+tibble(groups = c("a", "a", "a", "b", "b"),
+       num = c(1, 1, 2, 3, 4)) %>% 
+  group_by(groups) %>% 
+  slice_min(num, with_ties = TRUE)
+```
+
+## Select minimum value if available, otherwise NA if minimum value is missing
+
+Doesn't pick up NA as a min for group a, picks up the actual minimum 
+
+```{r}
+tibble(groups = c("a", "a", "a", "a", "b", "b", "c"),
+       num = c(1, 1, NA, 2, 3, 4, NA)) %>% 
+  group_by(groups) %>% 
+  slice(which.min(num), is.na(num))
+```
+
+## Two equivalent ways to specify binomial model (3/27/21)
+
+```{r}
+# https://stats.stackexchange.com/questions/189115/fitting-a-binomial-glmm-glmer-to-a-response-variable-that-is-a-proportion-or-f
+
+# cbind columns for outcome yes, outcome no
+# where outcome no = total # tries - total # yeses
+glmer(cbind(outcome_value, rep(7, nrow(data_long_adhere)) - outcome_value) ~ 
+        age_cat + race + gender2 + formulation + 
+        #race*formulation +# gender2*formulation +
+        (1 | ptid),
+      family = "binomial",
+      # weight = rep(7, nrow(data_long_adhere)),
+      data = data_long_adhere
+) %>% 
+  tbl_regression(exponentiate = TRUE) %>% 
+  add_global_p()
+
+# outcome / total number tries
+# weight statement = total number tries
+glmer(outcome_value / rep(7, nrow(data_long_adhere)) ~ 
+        age_cat + race + gender2 + formulation +# gender2*formulation +
+        (1 | ptid),
+      family = "binomial",
+      weight = rep(7, nrow(data_long_adhere)),
+      data = data_long_adhere
+) %>% 
+  tbl_regression(exponentiate = TRUE) %>% 
+  add_global_p()
+```
+
