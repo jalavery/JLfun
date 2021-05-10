@@ -13,6 +13,14 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+## Select variables matching specific criteria; 5/10/2021
+
+```{r}
+# select based on something like 
+# matches("drugs_drug_[[:digit:]]")
+# which will only include drugs_drug_1 to drugs_drug_5 without picking up the drugs_drug_oth.
+```
+
 ## Reshape data from multiple columns to 1 row per column (rather than rbind with renames; 2/7/2021)
 
 ```{r}
