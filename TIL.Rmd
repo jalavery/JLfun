@@ -13,6 +13,39 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+## Plot ggsurvplot objects side by side; 6/13/2021
+
+```{r}
+library(survival)
+library(survminer)
+
+# example data frame
+xx = data.frame(stim = c(2, 1:4),
+                sts = rep(1, 5))
+
+# survfit
+oo = survfit(Surv(time = stim, event = sts) ~ 1, data = xx)
+
+# create two ggplot objects
+plot1<- ggsurvplot(fit = oo, xlim=c(-2, 5))
+
+plot2<- ggsurvplot(fit = oo, xlim=c(-2, 5))
+
+# have to use $plot 
+# option 1: gridarrange
+ggarrange(plotlist=list(plot1$plot,plot2$plot),
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1)
+
+# option 2: patchwork
+library(patchwork)
+plot1$plot + plot2$plot
+
+# option 3: cowplot
+library(cowplot)
+plot_grid(plot1$plot, plot2$plot)
+```
+
 ## Select variables matching specific criteria; 5/10/2021
 
 ```{r}
