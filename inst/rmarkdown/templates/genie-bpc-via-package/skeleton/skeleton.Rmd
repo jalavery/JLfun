@@ -1,0 +1,31 @@
+---
+title: "Project Title: Analysis"
+author: "Jessica Lavery, MS"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(gtsummary)
+library(synapser)
+library(GenieBPC)
+
+synLogin()
+
+# Date        Update
+
+```
+
+## Overview
+
+## Methods
+
+## Results
