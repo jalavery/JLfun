@@ -7,7 +7,8 @@
 #' @return
 #' @export
 #'
-#' @examples See Tringale-Second Cancer project
+#' @examples
+#' # See Tringale-Second Cancer project
 cuminc_ci <- function(ci_fit, times, conf_level = 0.95) {
   # get estimates at each time point
   est <- cmprsk::timepoints(ci_fit, times)$est %>%
