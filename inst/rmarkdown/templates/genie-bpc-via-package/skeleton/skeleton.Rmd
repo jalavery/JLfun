@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(gtsummary)
 library(synapser)
-library(GenieBPC)
+library(genieBPC)
 
 synLogin()
 
