@@ -1,6 +1,6 @@
 #' Compute confidence intervals for cumulative incidence
 #'
-#' @param ci_fit The object returned by
+#' @param ci_fit The object returned by cmprsk::cuminc()
 #' @param times A vector of times at which to estimate the confidence interval
 #' @param conf_level The confidence interval; default is 0.95.
 #'

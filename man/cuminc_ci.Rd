@@ -7,7 +7,7 @@
 cuminc_ci(ci_fit, times, conf_level = 0.95)
 }
 \arguments{
-\item{ci_fit}{The object returned by}
+\item{ci_fit}{The object returned by cmprsk::cuminc()}
 
 \item{times}{A vector of times at which to estimate the confidence interval}
 
