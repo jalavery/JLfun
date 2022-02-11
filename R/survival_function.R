@@ -19,48 +19,61 @@
 #' @export
 #'
 #' @examples
+#' survival_function(df = gtsummary::trial,
+#' time = ttdeath, status = death)
 survival_function <- function(df, time1 = NULL, time, status,
-                              covar,
+                              covar = NULL,
                               time_units = "Months",
-                              time_origin = "Diagnosis",
-                              ...){
+                              time_origin = "Diagnosis"){
 
-  # if no covariate, just include 1
+  # if no covariate, just include a vector of 1s
   if (missing(covar)){
-    covar <- rep(1, nrow(df))
+    covar_temp <- rep(1, nrow(df))
+  } else {
+    covar_temp <- covar
   }
 
-  # km
+  #### km
   # if left truncation
   if (!is.null(time1)){
-    km <- survminer::surv_fit(Surv(
+    km <- survminer::surv_fit(survival::Surv(
       time = get(time1),
       time2 = get(time),
       get(status)
-    ) ~ covar,
+    ) ~ covar_temp,
     data = df
     )
   } else {
-    km <- survminer::surv_fit(Surv(
+    # without left truncation
+    km <- survminer::surv_fit(survival::Surv(
       get(time),
       get(status)
-    ) ~ get(covar),
+    ) ~ covar_temp,
     data = df
     )
   }
 
-  # table of median survival
+  #### table of median survival
   tbl_median_surv <- gtsummary::tbl_survfit(km,
                                  probs = 0.5,
                                  label_header =
                                    paste0("**Median survival (95% CI; ", time_units, ")**"))
 
-  # plot
+  #### plot
+  # legend labels
+  # if strata
+  if (!missing(covar)){
+    labs = stringr::word(names(km$strata), 2, sep = "=")
+  } else {
+    # if no strata
+    labs = NULL
+  }
+
   plot_survival <- survminer::ggsurvplot(
     fit = km,
     data = df,
     legend.title = "",
-    legend.labs = stringr::word(names(km$strata), 2, sep = "="),
+    legend.labs = labs,
     risk.table = TRUE,
     tables.y.text = FALSE,
     break.x.by = 12,
