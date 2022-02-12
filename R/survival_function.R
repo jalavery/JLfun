@@ -28,7 +28,8 @@ survival_function <- function(df, time1 = NULL, time, status,
 
   #### km
   # if left truncation, no covariate
-  if (!is.null(time1)){
+  if (!is.null(time1) & is.null(covar)){
+    message("Left truncation, no covariate")
     km <- survminer::surv_fit(survival::Surv(
       time = get(time1),
       time2 = get(time),
@@ -38,7 +39,7 @@ survival_function <- function(df, time1 = NULL, time, status,
     )
     # left truncation, with covariate
   } else if (!is.null(time1) & !is.null(covar)) {
-    # without left truncation
+    message("Left truncation, with covariate")
     km <- survminer::surv_fit(survival::Surv(
       time = get(time1),
       time2 = get(time),
@@ -48,7 +49,7 @@ survival_function <- function(df, time1 = NULL, time, status,
     )
     # no left truncation, no covariate
   } else if (is.null(time1) & is.null(covar)) {
-    # without left truncation
+    message("No left truncation, no covariate")
     km <- survminer::surv_fit(survival::Surv(
       get(time),
       get(status)
@@ -57,6 +58,7 @@ survival_function <- function(df, time1 = NULL, time, status,
     )
     # no left truncation, with covariate
   } else if (is.null(time1) & !is.null(covar)) {
+    message("No left truncation, with covariate")
     # without left truncation
     km <- survminer::surv_fit(survival::Surv(
       get(time),
