@@ -77,12 +77,12 @@ survival_function <- function(df, time1 = NULL, time, status,
   #### plot
   # legend labels
   # if strata
-  # if (!is.null(covar)){
-  #   labs = stringr::word(names(km$strata), 2, sep = "=")
-  # } else {
-  #   # if no strata
-  #   labs = NULL
-  # }
+  if (!is.null(covar)){
+    labs = stringr::word(names(km$strata), 2, sep = "=")
+  } else {
+    # if no strata
+    labs = NULL
+  }
 
   # if months vs years
   if (stringr::str_to_upper(time_units) == "MONTHS"){
