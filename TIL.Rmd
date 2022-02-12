@@ -168,3 +168,10 @@ glmer(outcome_value / rep(7, nrow(data_long_adhere)) ~
   add_global_p()
 ```
 
+## Competing Risks Regression
+
+Cumulative incidence curves usually estimated non-parametrically via `cmprsk::cuminc`
+
+Fine-Gray model is used to predict the cumulative incidence based on subdistribution hazards via `cmprsk::crr`
+
+Alternative approach is to compute the cause-specific hazard via `survival::coxph()`
