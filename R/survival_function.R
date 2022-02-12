@@ -26,29 +26,42 @@ survival_function <- function(df, time1 = NULL, time, status,
                               time_units = "Months",
                               time_origin = "Diagnosis"){
 
-  # if no covariate, just include a vector of 1s
-  if (missing(covar)){
-    covar_temp <- rep(1, nrow(df))
-  } else {
-    covar_temp <- covar
-  }
-
   #### km
-  # if left truncation
+  # if left truncation, no covariate
   if (!is.null(time1)){
     km <- survminer::surv_fit(survival::Surv(
       time = get(time1),
       time2 = get(time),
       get(status)
-    ) ~ covar_temp,
+    ) ~ NULL,
     data = df
     )
-  } else {
+    # left truncation, with covariate
+  } else if (!is.null(time1) & !is.null(covar)) {
+    # without left truncation
+    km <- survminer::surv_fit(survival::Surv(
+      time = get(time1),
+      time2 = get(time),
+      get(status)
+    ) ~ get(covar),
+    data = df
+    )
+    # no left truncation, no covariate
+  } else if (is.null(time1) & is.null(covar)) {
     # without left truncation
     km <- survminer::surv_fit(survival::Surv(
       get(time),
       get(status)
-    ) ~ covar_temp,
+    ) ~ NULL,
+    data = df
+    )
+    # no left truncation, with covariate
+  } else if (is.null(time1) & !is.null(covar)) {
+    # without left truncation
+    km <- survminer::surv_fit(survival::Surv(
+      get(time),
+      get(status)
+    ) ~ get(covar),
     data = df
     )
   }
@@ -62,21 +75,28 @@ survival_function <- function(df, time1 = NULL, time, status,
   #### plot
   # legend labels
   # if strata
-  if (!missing(covar)){
-    labs = stringr::word(names(km$strata), 2, sep = "=")
-  } else {
-    # if no strata
-    labs = NULL
+  # if (!is.null(covar)){
+  #   labs = stringr::word(names(km$strata), 2, sep = "=")
+  # } else {
+  #   # if no strata
+  #   labs = NULL
+  # }
+
+  # if months vs years
+  if (stringr::str_to_upper(time_units) == "MONTHS"){
+    break_x = 12
+  } else if (stringr::str_to_upper(time_units) == "YEARS"){
+    break_x = 2
   }
 
   plot_survival <- survminer::ggsurvplot(
     fit = km,
     data = df,
     legend.title = "",
-    legend.labs = labs,
+    # legend.labs = labs,
     risk.table = TRUE,
     tables.y.text = FALSE,
-    break.x.by = 12,
+    break.x.by = break_x,
     ylab = "Survival Probability",
     xlab = paste0("Time (", time_units, ") From ", time_origin)
   )
