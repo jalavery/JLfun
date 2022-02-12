@@ -69,21 +69,24 @@ survival_function <- function(df, time1 = NULL, time, status,
   }
 
   #### table of median survival
+  # table and legend labels
+  # if strata
+  if (!is.null(covar)){
+    tbl_covar_lab = {{covar}}
+    # tbl_covar_lab = eval(parse(text = paste0("get(covar) ~ \'", "new label", "\'")))
+    labs = stringr::word(names(km$strata), 2, sep = "=")
+  } else { # if no strata
+    tbl_covar_lab = NULL
+    labs = NULL
+  }
+
   tbl_median_surv <- gtsummary::tbl_survfit(km,
                                  probs = 0.5,
+                                 label = tbl_covar_lab,
                                  label_header =
                                    paste0("**Median survival (95% CI; ", time_units, ")**"))
 
   #### plot
-  # legend labels
-  # if strata
-  if (!is.null(covar)){
-    labs = stringr::word(names(km$strata), 2, sep = "=")
-  } else {
-    # if no strata
-    labs = NULL
-  }
-
   # if months vs years
   if (stringr::str_to_upper(time_units) == "MONTHS"){
     break_x = 12
