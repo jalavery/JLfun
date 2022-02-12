@@ -72,8 +72,8 @@ survival_function <- function(df, time1 = NULL, time, status,
   # table and legend labels
   # if strata
   if (!is.null(covar)){
-    tbl_covar_lab = {{covar}}
-    # tbl_covar_lab = eval(parse(text = paste0("get(covar) ~ \'", "new label", "\'")))
+    # tbl_covar_lab = {{covar}} # deprecated and no longer accepts a single string
+    tbl_covar_lab = eval(parse(text = paste0("`get(covar)` ~ \'", covar, "\'")))
     labs = stringr::word(names(km$strata), 2, sep = "=")
   } else { # if no strata
     tbl_covar_lab = NULL
