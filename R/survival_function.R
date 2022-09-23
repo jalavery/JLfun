@@ -24,7 +24,8 @@
 survival_function <- function(df, time1 = NULL, time, status,
                               covar = NULL,
                               time_units = "Months",
-                              time_origin = "Diagnosis"){
+                              time_origin = "Diagnosis",
+                              ...){
 
   #### km
   # if left truncation, no covariate
@@ -103,7 +104,8 @@ survival_function <- function(df, time1 = NULL, time, status,
     tables.y.text = FALSE,
     break.x.by = break_x,
     ylab = "Survival Probability",
-    xlab = paste0("Time (", time_units, ") From ", time_origin)
+    xlab = paste0("Time (", time_units, ") From ", time_origin),
+    ...
   )
 
   # return data frames, tables and survival analyses
