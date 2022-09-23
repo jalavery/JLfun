@@ -175,3 +175,7 @@ Cumulative incidence curves usually estimated non-parametrically via `cmprsk::cu
 Fine-Gray model is used to predict the cumulative incidence based on subdistribution hazards via `cmprsk::crr`
 
 Alternative approach is to compute the cause-specific hazard via `survival::coxph()`
+
+## R Package Development
+
+- (Code Coverage Badge)[https://www.r-bloggers.com/2017/06/how-to-add-code-coverage-codecov-to-your-r-package/]
